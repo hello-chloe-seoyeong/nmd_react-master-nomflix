@@ -9,14 +9,14 @@ function App() {
     <Router>
       <Header />
       <Routes>
-        <Route path="/">
-          <Home />
+        <Route path="/" element={<Home />}>
+          {/* <Home /> */}
         </Route>
-        <Route path="/tv">
-          <Tv />
+        <Route path="/tv" element={<Tv />}>
+          {/* <Tv /> */}
         </Route>
-        <Route path="/search">
-          <Search />
+        <Route path="/search" element={<Search />}>
+          {/* <Search /> */}
         </Route>
       </Routes>
     </Router>

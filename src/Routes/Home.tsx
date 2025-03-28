@@ -67,6 +67,29 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   }
 `;
 
+const Info = styled(motion.div)`
+  padding: 10px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  h4 {
+    font-size: 18px;
+    text-align: center;
+  }
+`;
+
+const infoVariants = {
+  hover: {
+    opacity: 1,
+    transition: {
+      delay: 0.5,
+      duration: 0.1,
+      type: "tween",
+    },
+  },
+};
 const rowVariants = {
   hidden: {
     x: window.outerWidth,
@@ -88,7 +111,7 @@ const boxVariants = {
     y: -50,
     transition: {
       delay: 0.5,
-      duration: 0.3,
+      duration: 0.1,
       type: "tween",
     },
   },
@@ -156,7 +179,11 @@ function Home() {
                       initial="normal"
                       variants={boxVariants}
                       transition={{ type: "tween" }}
-                    />
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
                   ))}
               </Row>
             </AnimatePresence>

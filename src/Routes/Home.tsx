@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
+import useWindowDimensions from "../windowDimensions";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -69,6 +70,7 @@ const rowVariants = {
 };
 
 function Home() {
+  const width = useWindowDimensions();
   const { data, error, isLoading } = useQuery<IGetMoviesResult>({
     queryKey: ["movie", "nowPlaying"],
     queryFn: getMovies,
@@ -94,10 +96,10 @@ function Home() {
             <AnimatePresence>
               <Row
                 variants={rowVariants}
-                initial="hiddne"
-                animate="visible"
-                exit="exit"
-                transition={{ type: "spring", duration: 5 }}
+                initial={{ x: width + 10 }}
+                animate={{ x: 0 }}
+                exit={{ x: -width - 10 }}
+                transition={{ type: "tween", duration: 1 }}
                 key={index}
               >
                 {[1, 2, 3, 4, 5, 6].map((i) => (

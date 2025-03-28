@@ -3,7 +3,7 @@ import { getMovies, IGetMoviesResult } from "../api";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import { motion, AnimatePresence } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useWindowDimensions from "../windowDimensions";
 
 const Wrapper = styled.div`
@@ -76,7 +76,8 @@ const rowVariants = {
 const offset = 6;
 
 function Home() {
-  const width = useWindowDimensions();
+  // const width = useWindowDimensions();
+  const widthRef = useRef(window.outerWidth);
   const { data, error, isLoading } = useQuery<IGetMoviesResult>({
     queryKey: ["movie", "nowPlaying"],
     queryFn: getMovies,
@@ -95,6 +96,12 @@ function Home() {
   };
   const toggleLeaving = () => setLeaving((prev) => !prev);
   console.log(data, isLoading);
+
+  useEffect(() => {
+    const updateWidth = () => (widthRef.current = window.outerWidth);
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
   return (
     <Wrapper>
       {isLoading ? (
@@ -112,9 +119,9 @@ function Home() {
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
               <Row
                 variants={rowVariants}
-                initial={{ x: width + 10 }}
+                initial={{ x: widthRef.current + 10 }}
                 animate={{ x: 0 }}
-                exit={{ x: -width - 10 }}
+                exit={{ x: -widthRef.current - 10 }}
                 transition={{ type: "tween", duration: 1 }}
                 key={index}
               >

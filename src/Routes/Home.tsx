@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { getMovies, IGetMoviesResult } from "../api";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
+import { motion, AnimatePresence } from "motion/react";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -27,17 +29,53 @@ const Banner = styled.div<{ bgPhoto: string }>`
 
 const Title = styled.h2`
   font-size: 68px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `;
 const Overview = styled.p`
   font-size: 36px;
   width: 50%;
 `;
+
+const Slider = styled.div`
+  position: relative;
+  top: -100px;
+`;
+
+const Row = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  position: absolute;
+  width: 100%;
+`;
+
+const Box = styled(motion.div)`
+  background-color: #fff;
+  height: 200px;
+  color: red;
+  font-size: 66px;
+`;
+
+const rowVariants = {
+  hidden: {
+    x: window.outerWidth,
+  },
+  visible: {
+    x: 0,
+  },
+  exit: {
+    x: -window.outerWidth,
+  },
+};
+
 function Home() {
   const { data, error, isLoading } = useQuery<IGetMoviesResult>({
     queryKey: ["movie", "nowPlaying"],
     queryFn: getMovies,
   });
+
+  const [index, setIndex] = useState(0);
+  const increaseIndex = () => setIndex((prev) => prev + 1);
   console.log(data, isLoading);
   return (
     <Wrapper>
@@ -45,10 +83,29 @@ function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Banner bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}>
+          <Banner
+            onClick={increaseIndex}
+            bgPhoto={makeImagePath(data?.results[0].backdrop_path || "")}
+          >
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
+          <Slider>
+            <AnimatePresence>
+              <Row
+                variants={rowVariants}
+                initial="hiddne"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "spring", duration: 5 }}
+                key={index}
+              >
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Box key={i}>{i}</Box>
+                ))}
+              </Row>
+            </AnimatePresence>
+          </Slider>
         </>
       )}
     </Wrapper>

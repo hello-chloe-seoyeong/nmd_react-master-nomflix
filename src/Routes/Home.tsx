@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { makeImagePath } from "../utils";
 import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import useWindowDimensions from "../windowDimensions";
+import { SC_ATTR } from "styled-components/dist/constants";
 
 const Wrapper = styled.div`
   background-color: black;
@@ -59,6 +59,12 @@ const Box = styled(motion.div)<{ bgPhoto: string }>`
   height: 200px;
   font-size: 66px;
   gap: 5px;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
 `;
 
 const rowVariants = {
@@ -73,10 +79,24 @@ const rowVariants = {
   },
 };
 
+const boxVariants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: {
+      delay: 0.5,
+      duration: 0.3,
+      type: "tween",
+    },
+  },
+};
+
 const offset = 6;
 
 function Home() {
-  // const width = useWindowDimensions();
   const widthRef = useRef(window.outerWidth);
   const { data, error, isLoading } = useQuery<IGetMoviesResult>({
     queryKey: ["movie", "nowPlaying"],
@@ -132,6 +152,10 @@ function Home() {
                     <Box
                       key={movie.id}
                       bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      whileHover="hover"
+                      initial="normal"
+                      variants={boxVariants}
+                      transition={{ type: "tween" }}
                     />
                   ))}
               </Row>

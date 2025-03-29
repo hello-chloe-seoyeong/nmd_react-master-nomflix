@@ -9,15 +9,15 @@ function App() {
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />}>
-          <Route path="/movies/:id" element={<Home />} />
-          {/* <Home /> */}
-        </Route>
         <Route path="/tv" element={<Tv />}>
           {/* <Tv /> */}
         </Route>
         <Route path="/search" element={<Search />}>
           {/* <Search /> */}
+        </Route>
+        <Route path="/" element={<Home />}>
+          <Route path="/movies/:movieId" element={<Home />} />
+          {/* <Home /> */}
         </Route>
       </Routes>
     </Router>
